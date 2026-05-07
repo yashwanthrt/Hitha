@@ -186,74 +186,85 @@
         <div class="album-title">${isFirstAlbum ? '<a href="album.html" style="color:inherit; text-decoration:none;">Album 1</a>' : 'Album ' + (index + 1)}</div>
       `;
 
-      if (isFirstAlbum) {
-        album.querySelector('img').style.cursor = 'pointer';
-        album.querySelector('img').addEventListener('click', (e) => {
-          e.stopPropagation();
-          window.location.href = 'album.html';
-        });
-      }
-
-      makeDraggable(album);
+      makeDraggable(album, isFirstAlbum ? () => window.location.href = 'album.html' : null);
       albumsContainer.appendChild(album);
     });
 
-    function makeDraggable(el) {
+    function makeDraggable(el, onClickCallback) {
       let isDragging = false;
+      let startX = 0, startY = 0;
       let offsetX = 0, offsetY = 0;
+      const DRAG_THRESHOLD = 5; // pixels — below this = click, above = drag
 
       function startDrag(x, y) {
-        isDragging = true;
+        startX = x;
+        startY = y;
         offsetX = x - el.offsetLeft;
         offsetY = y - el.offsetTop;
+        isDragging = false; // not confirmed dragging yet
         el.style.cursor = "grabbing";
       }
 
       function moveAt(x, y) {
-        if (!isDragging) return;
-        el.style.left = `${x - offsetX}px`;
-        el.style.top = `${y - offsetY}px`;
+        const dx = Math.abs(x - startX);
+        const dy = Math.abs(y - startY);
+        if (!isDragging && (dx > DRAG_THRESHOLD || dy > DRAG_THRESHOLD)) {
+          isDragging = true; // confirmed drag
+        }
+        if (isDragging) {
+          el.style.left = `${x - offsetX}px`;
+          el.style.top = `${y - offsetY}px`;
+        }
       }
 
-      function stopDrag() {
-        isDragging = false;
+      function stopDrag(x, y) {
         el.style.cursor = "grab";
+        const dx = Math.abs(x - startX);
+        const dy = Math.abs(y - startY);
+        // If movement was tiny, treat as a click
+        if (dx <= DRAG_THRESHOLD && dy <= DRAG_THRESHOLD && onClickCallback) {
+          onClickCallback();
+        }
+        isDragging = false;
       }
 
+      // Mouse events
       el.addEventListener("mousedown", (e) => {
         e.preventDefault();
         startDrag(e.clientX, e.clientY);
+
+        function onMouseMove(e) { moveAt(e.clientX, e.clientY); }
+        function onMouseUp(e) {
+          stopDrag(e.clientX, e.clientY);
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener("mouseup", onMouseUp);
+        }
+
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
       });
 
-      function onMouseMove(e) { moveAt(e.clientX, e.clientY); }
-
-      function onMouseUp() {
-        stopDrag();
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      }
-
+      // Touch events
       el.addEventListener("touchstart", (e) => {
         const touch = e.touches[0];
         startDrag(touch.clientX, touch.clientY);
+
+        function onTouchMove(e) {
+          const t = e.touches[0];
+          moveAt(t.clientX, t.clientY);
+        }
+        function onTouchEnd(e) {
+          const t = e.changedTouches[0];
+          stopDrag(t.clientX, t.clientY);
+          el.removeEventListener("touchmove", onTouchMove);
+          el.removeEventListener("touchend", onTouchEnd);
+          el.removeEventListener("touchcancel", onTouchEnd);
+        }
+
         el.addEventListener("touchmove", onTouchMove);
         el.addEventListener("touchend", onTouchEnd);
         el.addEventListener("touchcancel", onTouchEnd);
       });
-
-      function onTouchMove(e) {
-        const touch = e.touches[0];
-        moveAt(touch.clientX, touch.clientY);
-      }
-
-      function onTouchEnd() {
-        stopDrag();
-        el.removeEventListener("touchmove", onTouchMove);
-        el.removeEventListener("touchend", onTouchEnd);
-        el.removeEventListener("touchcancel", onTouchEnd);
-      }
     }
 
     const sidebar = document.getElementById('sidebar');
