@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HITHA EEGA</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      height:100%;
+      font-family: arial;
+      color:grey !important;
+      background:#fff;
+      overflow-x:hidden;
+      scroll-behavior: smooth;
+    }
+
+    body { cursor: url('forward-cursor.png'), pointer; }
+
+    header, header *,
+    .footer, .footer *,
+    .sidebar, .sidebar *,
+    section#about, section#about *,
+    body, html {
+      font-family: arial !important;
+      font-size: 0.9rem;
+      color:#444 !important;
+    }
+
+    .hero {
+      position:relative;
+      width:100%;
+      height:100vh;
+      background: url('hero-placeholder.jpg') center center/cover no-repeat;
+    }
+
+    .slideshow {
+      cursor: url('arrow-cursor.png'), auto;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .slideshow img {
+      width: 400px;
+      height: 400px;
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: cover;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 1s;
+      cursor: pointer;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    header {
+      position: absolute;
+      top: 4rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(255,255,255,0.8);
+      z-index: 2;
+    }
+
+    .logo { font-size:1rem; color: #000; margin-left: 5rem; }
+
+    .menu-btn {
+      position: absolute;
+      top: 1rem;
+      right: 5.5rem;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: #000;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      margin-top: 1.5rem;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0);
+      padding: 3rem 1.5rem;
+      transition: right 1s ease, background 2s ease;
+      z-index: 3;
+      border-left: none;
+      box-shadow: none;
+    }
+
+    .sidebar.open {
+      right: 0;
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .sidebar nav a {
+      display: block;
+      margin: 1rem 0;
+      color: #333;
+      text-decoration: none;
+      padding: .5rem 1rem;
+      transition: color 0.2s, transform 0.2s ease;
+      font-family: Georgia, serif;
+      font-size: 0.9rem;
+    }
+
+    .sidebar nav a:hover {
+      color: #000;
+      font-weight: bold;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0);
+      z-index: 2;
+    }
+
+    .overlay.show { display: block; }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      margin-left: 4rem;
+      background: rgba(255, 255, 255, 0.8);
+      color: #000;
+      z-index: 5;
+    }
+
+    .footer a {
+      color: #000;
+      text-decoration: none;
+      pointer-events: auto;
+    }
+
+    .footer a:hover { text-decoration: underline; }
+
+    #lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      cursor: zoom-out;
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #9a9a9a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9a9a9a; }
+  </style>
+</head>
+<body>
+  <div class="hero" onclick="closeSidebar()">
+    <div class="slideshow" id="slideshow" onmouseenter="pauseSlideshow()" onmouseleave="resumeSlideshow(event)">
+      <img src="https://www.artalistic.com/en/media/blog/images/10_most_famous_photos_of_all_time.jpg" class="slide active">
+      <img src="https://blog.artsper.com/wp-content/uploads/2025/03/Hans-Gutmann-Marina-Ginesta-at-the-top-of-Hotel-Colon-in-Barcelona-21-July-19361.jpg" class="slide">
+      <img src="https://www.invaluable.com/blog/wp-content/uploads/sites/77/2023/01/Muhammad-Ali-670x670.jpg" class="slide">
+    </div>
+    <header>
+      <div class="logo">HITHA EEGA</div>
+      <button class="menu-btn" id="menu-button">+</button>
+    </header>
+    <div id="sidebar" class="sidebar">
+      <nav>
+        <a href="works.html">Works in Series</a>
+        <a href="portraits.html">Portraits</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
+    <div id="overlay" class="overlay" onclick="closeSidebar()"></div>
+  </div>
+
+  <div id="lightbox" onclick="closeLightbox(event)">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <div class="footer">
+    <a href="https://www.instagram.com/hithareddy_?igsh=ZW0yeTRqcTA5dnBh" target="_blank" onclick="event.stopPropagation()">Instagram</a>
+  </div>
+
+  <script>
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      if (!sidebar.classList.contains('open')) {
+        setTimeout(() => { sidebar.classList.add('open'); }, 200);
+      } else {
+        sidebar.classList.remove('open');
+      }
+      overlay.classList.toggle('show');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    window.onload = function () {
+      const slideshow = document.getElementById('slideshow');
+      const slides = document.querySelectorAll('.slide');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+
+      let slideIndex = 0;
+      let paused = false;
+      let interval = setInterval(() => showNextSlide(), 3000);
+
+      function showNextSlide(manual = false) {
+        slides[slideIndex].classList.remove('active');
+        slideIndex = (slideIndex + 1) % slides.length;
+        slides[slideIndex].classList.add('active');
+        if (manual) resetSlideshowTimer();
+      }
+
+      function showPreviousSlide(manual = false) {
+        slides[slideIndex].classList.remove('active');
+        slideIndex = (slideIndex - 1 + slides.length) % slides.length;
+        slides[slideIndex].classList.add('active');
+        if (manual) resetSlideshowTimer();
+      }
+
+      function pauseSlideshow() { paused = true; }
+      function resumeSlideshow() { paused = false; }
+
+      function resetSlideshowTimer() {
+        clearInterval(interval);
+        paused = false;
+        interval = setInterval(() => showNextSlide(), 5000);
+      }
+
+      slides.forEach((img) => {
+        img.addEventListener('mouseenter', pauseSlideshow);
+        img.addEventListener('mouseleave', resumeSlideshow);
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.src;
+          lightbox.style.display = 'flex';
+        });
+      });
+
+      function closeLightbox(e) {
+        if (e.target.id === 'lightbox' || e.target.id === 'lightbox-img') {
+          lightbox.style.display = 'none';
+        }
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') lightbox.style.display = 'none';
+      });
+
+      slideshow.addEventListener('click', (e) => {
+        if (lightbox.style.display === 'flex') return;
+        const rect = slideshow.getBoundingClientRect();
+        const mid = rect.left + rect.width / 2;
+        if (e.clientX > mid) {
+          showNextSlide(true);
+        } else {
+          showPreviousSlide(true);
+        }
+      });
+
+      slideshow.addEventListener('mousemove', (e) => {
+        const rect = slideshow.getBoundingClientRect();
+        const mid = rect.left + rect.width / 2;
+        slideshow.style.cursor = e.clientX > mid
+          ? 'url("forward-cursor.png"), auto'
+          : 'url("backward-cursor.png"), auto';
+      });
+
+      slideshow.addEventListener('mouseleave', () => {
+        slideshow.style.cursor = 'url("arrow-cursor.png"), auto';
+      });
+
+      document.getElementById('menu-button').addEventListener('click', toggleSidebar);
+
+      window.pauseSlideshow = pauseSlideshow;
+      window.resumeSlideshow = resumeSlideshow;
+      window.closeSidebar = closeSidebar;
+      window.closeLightbox = closeLightbox;
+    };
+  </script>
+</body>
+</html>

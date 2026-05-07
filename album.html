@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Album - HITHA EEGA</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: Arial, sans-serif;
+      color: #444;
+      overflow-x: hidden;
+    }
+
+    header, header * {
+      font-family: arial !important;
+      font-size: 1rem;
+      color: #444 !important;
+    }
+
+    header {
+      position: absolute;
+      top: 4.5rem;
+      left: 0rem;
+      right: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0rem 1rem;
+      background: rgba(255,255,255,0.8);
+      z-index: 10000;
+    }
+
+    .logo { font-size: .9rem; color: #000; margin-left: 5rem; }
+    .header-center { font-size: 0.9rem; position: absolute; left: 50%; transform: translateX(-50%); }
+
+    .menu-btn {
+      position: absolute;
+      top: 0rem;
+      right: 3rem;
+      font-size: 1.4rem;
+      background: none;
+      border: none;
+      color: #444;
+      cursor: pointer;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      margin-top: 1.5rem;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0);
+      padding: 3rem 1.5rem;
+      transition: right 1s ease, background 2s ease;
+      z-index: 3;
+      border-left: none;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .sidebar.open {
+      right: 0;
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .sidebar nav a {
+      display: block;
+      margin: .7rem 1.2rem;
+      color: #333;
+      text-decoration: none;
+      padding: 0.5rem .5rem;
+      transition: color 0.2s, transform 0.2s ease;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .sidebar nav a:hover {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0);
+      z-index: 2;
+    }
+
+    .overlay.show { display: block; }
+
+    main {
+      margin-top: 80px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px;
+    }
+
+    .slideshow-container {
+      width: 100%;
+      margin-bottom: 60px;
+      margin-top: 3.8rem;
+      position: relative;
+      height: 430px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .slide {
+      width: 100%;
+      height: 430px;
+      object-fit: cover;
+      border-radius: 4px;
+      pointer-events: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+
+    .slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .divider-line {
+      position: relative;
+      left: calc(-50vw + 50%);
+      width: 100vw;
+      height: 1px;
+      background: rgba(0,0,0,0.05);
+      border-radius: 1px;
+      margin: 20px 0;
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, 400px);
+      column-gap: 100px;
+      row-gap: 120px;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .thumbs img {
+      width: 400px;
+      height: 190px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      transition: opacity 0.2s, border-color 0.2s;
+    }
+
+    .thumbs img:hover { opacity: 0.7; }
+
+    #lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #fff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #lightbox img {
+      width: 75vw;
+      height: 75vh;
+      object-fit: contain;
+      cursor: zoom-out;
+      padding: 0;
+      background: none;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #9a9a9a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9a9a9a; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">HITHA EEGA</div>
+    <div class="header-center">Album 1</div>
+    <button class="menu-btn" id="menu-button">+</button>
+  </header>
+
+  <div id="sidebar" class="sidebar">
+    <nav>
+      <a href="UI.html">Home</a>
+      <a href="works.html">Works in Series</a>
+      <a href="portraits.html">Portraits</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+  <div id="overlay" class="overlay"></div>
+
+  <main>
+    <div class="slideshow-container" id="slideshow">
+      <img class="slide active" src="https://picsum.photos/id/1011/600/430" alt="Slide 1" />
+      <img class="slide" src="https://picsum.photos/id/1021/600/430" alt="Slide 2" />
+      <img class="slide" src="https://picsum.photos/id/1031/600/430" alt="Slide 3" />
+      <img class="slide" src="https://picsum.photos/id/1041/600/430" alt="Slide 4" />
+      <img class="slide" src="https://picsum.photos/id/1051/600/430" alt="Slide 5" />
+    </div>
+
+    <div style="height: 90px;"></div>
+    <div class="divider-line"></div>
+
+    <div class="thumbs">
+      <img src="https://picsum.photos/id/1011/300/200" onclick="showSlide(0, true)" alt="Thumb 1" />
+      <img src="https://picsum.photos/id/1021/300/200" onclick="showSlide(1, true)" alt="Thumb 2" />
+      <img src="https://picsum.photos/id/1031/300/200" onclick="showSlide(2, true)" alt="Thumb 3" />
+      <img src="https://picsum.photos/id/1041/300/200" onclick="showSlide(3, true)" alt="Thumb 4" />
+      <img src="https://picsum.photos/id/1051/300/200" onclick="showSlide(4, true)" alt="Thumb 5" />
+    </div>
+  </main>
+
+  <div id="lightbox" onclick="closeLightbox(event)">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menu-button');
+
+    menuBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = sidebar.classList.contains('open');
+      if (!isOpen) {
+        setTimeout(() => sidebar.classList.add('open'), 200);
+        menuBtn.style.opacity = '0';
+        menuBtn.style.pointerEvents = 'none';
+      } else {
+        sidebar.classList.remove('open');
+        menuBtn.style.opacity = '1';
+        menuBtn.style.pointerEvents = 'auto';
+      }
+      overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuBtn.style.opacity = '1';
+      menuBtn.style.pointerEvents = 'auto';
+    });
+
+    document.body.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        menuBtn.style.opacity = '1';
+        menuBtn.style.pointerEvents = 'auto';
+      }
+    });
+
+    sidebar.addEventListener('click', e => e.stopPropagation());
+
+    const slideshowEl = document.getElementById('slideshow');
+    const slides = document.querySelectorAll('.slide');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+
+    let currentIndex = 0;
+    let paused = false;
+    let autoSlideInterval = setInterval(() => { if (!paused) showSlide(currentIndex + 1); }, 4000);
+
+    function showSlide(index, scrollUp = false) {
+      slides[currentIndex].classList.remove('active');
+      currentIndex = ((index % slides.length) + slides.length) % slides.length;
+      slides[currentIndex].classList.add('active');
+      if (scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetTimer() {
+      clearInterval(autoSlideInterval);
+      paused = false;
+      autoSlideInterval = setInterval(() => { if (!paused) showSlide(currentIndex + 1); }, 4000);
+    }
+
+    slideshowEl.addEventListener('mouseenter', () => paused = true);
+    slideshowEl.addEventListener('mouseleave', () => paused = false);
+
+    document.body.addEventListener('click', (e) => {
+      if (lightbox.style.display === 'flex') return;
+      if (e.target.closest('#slideshow, header, #sidebar, .thumbs, #overlay')) return;
+      const mid = window.innerWidth / 2;
+      if (e.clientX > mid) {
+        showSlide(currentIndex + 1, false);
+        resetTimer();
+      } else {
+        showSlide(currentIndex - 1, false);
+        resetTimer();
+      }
+    });
+
+    slideshowEl.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('slide')) return;
+      e.stopPropagation();
+      clearInterval(autoSlideInterval);
+      paused = true;
+      lightboxImg.src = slides[currentIndex].src;
+      lightbox.style.display = 'flex';
+    });
+
+    function closeLightbox(e) {
+      if (e.target.id === 'lightbox' || e.target.id === 'lightbox-img') {
+        lightbox.style.display = 'none';
+        paused = false;
+        autoSlideInterval = setInterval(() => { if (!paused) showSlide(currentIndex + 1); }, 4000);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+        lightbox.style.display = 'none';
+        paused = false;
+        autoSlideInterval = setInterval(() => { if (!paused) showSlide(currentIndex + 1); }, 4000);
+      }
+    });
+
+    window.showSlide = showSlide;
+    window.closeLightbox = closeLightbox;
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Works in Series - HITHA EEGA</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: arial, serif;
+      color: #333;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body { cursor: url('forward-cursor.png'), pointer; }
+
+    header, header *,
+    .footer, .footer *,
+    .sidebar, .sidebar *,
+    section#about, section#about *,
+    body, html {
+      font-family: arial, serif;
+      font-size: 0.9rem;
+    }
+
+    header {
+      position: relative;
+      top: 3.7rem;
+      left: 2rem;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5rem;
+      z-index: 1000;
+    }
+
+    .header-left { font-size: 1rem; }
+
+    .header-center {
+      text-align: center;
+      font-size: 1rem;
+      user-select: none;
+    }
+
+    .menu-btn {
+      margin-right: 2.5rem;
+      margin-top: .3rem;
+      font-size: 1.5rem;
+      background: none;
+      color: #444;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+
+    .menu-btn.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0);
+      padding: 5rem 1.5rem 3rem;
+      transition: right 1s ease, background 2s ease;
+      z-index: 2000;
+      border-left: none;
+      box-shadow: none;
+    }
+
+    .sidebar.open {
+      right: 0;
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .sidebar nav a {
+      display: block;
+      margin: 1.5rem .6rem;
+      color: #333;
+      text-decoration: none;
+      padding: 0.3rem .6rem;
+      transition: color 0.2s;
+    }
+
+    .sidebar nav a:hover {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .overlay.show { display: none; }
+
+    .content {
+      margin-top: 2rem;
+      height: 4000px;
+      position: relative;
+    }
+
+    .album {
+      margin-top: 5rem;
+      position: absolute;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .album img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .album-title {
+      font-size: 1rem;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #9a9a9a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9a9a9a; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">HITHA EEGA</div>
+    <div class="header-center">Works in Series</div>
+    <button class="menu-btn" id="menu-button">+</button>
+  </header>
+
+  <div id="sidebar" class="sidebar">
+    <nav>
+      <a href="UI.html">Home</a>
+      <a href="works.html">Works in Series</a>
+      <a href="portraits.html">Portraits</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+  <div id="overlay" class="overlay"></div>
+
+  <main class="content" id="albums"></main>
+
+  <script>
+    const albumData = [1011, 1021, 1031, 1041, 1051, 1061, 1071, 1081, 1025, 1035, 1045, 1055];
+    const albumsContainer = document.getElementById("albums");
+
+    albumData.forEach((id, index) => {
+      const album = document.createElement("div");
+      album.className = "album";
+
+      const offsetX = index % 2 === 0 ? -300 : 300;
+      const posY = index * 300;
+
+      const randomWidth = Math.floor(Math.random() * 330) + 300;
+      const randomHeight = Math.floor(Math.random() * 170) + 450;
+
+      album.style.width = `${randomWidth}px`;
+      album.style.height = `${randomHeight}px`;
+      album.style.left = `${window.innerWidth / 2 + offsetX - randomWidth / 2}px`;
+      album.style.top = `${posY}px`;
+
+      const isFirstAlbum = index === 0;
+      album.innerHTML = `
+        <img src="https://picsum.photos/id/${id}/${randomWidth}/${randomHeight - 40}" alt="Album ${index + 1}">
+        <div class="album-title">${isFirstAlbum ? '<a href="album.html" style="color:inherit; text-decoration:none;">Album 1</a>' : 'Album ' + (index + 1)}</div>
+      `;
+
+      if (isFirstAlbum) {
+        album.querySelector('img').style.cursor = 'pointer';
+        album.querySelector('img').addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.location.href = 'album.html';
+        });
+      }
+
+      makeDraggable(album);
+      albumsContainer.appendChild(album);
+    });
+
+    function makeDraggable(el) {
+      let isDragging = false;
+      let offsetX = 0, offsetY = 0;
+
+      function startDrag(x, y) {
+        isDragging = true;
+        offsetX = x - el.offsetLeft;
+        offsetY = y - el.offsetTop;
+        el.style.cursor = "grabbing";
+      }
+
+      function moveAt(x, y) {
+        if (!isDragging) return;
+        el.style.left = `${x - offsetX}px`;
+        el.style.top = `${y - offsetY}px`;
+      }
+
+      function stopDrag() {
+        isDragging = false;
+        el.style.cursor = "grab";
+      }
+
+      el.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+      });
+
+      function onMouseMove(e) { moveAt(e.clientX, e.clientY); }
+
+      function onMouseUp() {
+        stopDrag();
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      el.addEventListener("touchstart", (e) => {
+        const touch = e.touches[0];
+        startDrag(touch.clientX, touch.clientY);
+        el.addEventListener("touchmove", onTouchMove);
+        el.addEventListener("touchend", onTouchEnd);
+        el.addEventListener("touchcancel", onTouchEnd);
+      });
+
+      function onTouchMove(e) {
+        const touch = e.touches[0];
+        moveAt(touch.clientX, touch.clientY);
+      }
+
+      function onTouchEnd() {
+        stopDrag();
+        el.removeEventListener("touchmove", onTouchMove);
+        el.removeEventListener("touchend", onTouchEnd);
+        el.removeEventListener("touchcancel", onTouchEnd);
+      }
+    }
+
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menu-button');
+
+    function toggleSidebar(event) {
+      event.stopPropagation();
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      if (sidebar.classList.contains('open')) {
+        menuBtn.classList.add('hide');
+      } else {
+        menuBtn.classList.remove('hide');
+      }
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuBtn.classList.remove('hide');
+    }
+
+    menuBtn.addEventListener('click', toggleSidebar);
+
+    document.body.addEventListener('click', (e) => {
+      if (
+        sidebar.classList.contains('open') &&
+        !sidebar.contains(e.target) &&
+        !menuBtn.contains(e.target)
+      ) {
+        closeSidebar();
+      }
+    });
+
+    sidebar.addEventListener('click', e => e.stopPropagation());
+    menuBtn.addEventListener('click', e => e.stopPropagation());
+  </script>
+</body>
+</html>

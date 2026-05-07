@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HITHA EEGA</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .content {
+      width: 90%;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 3rem;
+      text-align: left;
+    }
+
+    a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    p {
+      font-size: 0.75rem;
+      text-align: justify;
+    }
+
+    .menu-btn {
+      position: fixed;
+      top: 4.4rem;
+      right: 4.5rem;
+      font-size: 1.4rem;
+      background: none;
+      border: none;
+      color: #444;
+      cursor: pointer;
+      z-index: 100;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: .5rem;
+      margin-top: 2rem;
+      right: -300px;
+      width: 250px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0);
+      padding: 3rem 1.5rem;
+      transition: right 1s ease, background 2s ease;
+      z-index: 3;
+      border-left: none;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .sidebar.open {
+      right: 0;
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .sidebar nav a {
+      display: block;
+      margin: -.7rem 4.3rem;
+      margin-bottom: 1rem;
+      color: #333;
+      text-decoration: none;
+      padding: 0.5rem .5rem;
+      transition: color 0.2s, transform 0.2s ease;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .sidebar nav a:hover {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0);
+      z-index: 2;
+    }
+
+    .overlay.show { display: block; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #9a9a9a; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #9a9a9a; }
+  </style>
+</head>
+<body>
+
+  <button class="menu-btn" id="menu-button">+</button>
+
+  <div id="sidebar" class="sidebar">
+    <nav>
+      <a href="UI.html">Home</a>
+      <a href="works.html">Works in Series</a>
+      <a href="portraits.html">Portraits</a>
+    </nav>
+  </div>
+  <div id="overlay" class="overlay"></div>
+
+  <div class="content">
+    <h1>HITHA EEGA</h1>
+    <p>
+      Raajadharshini is a Tamil-born image maker whose style revolves around treading a line artfully between fashion, documentary, and portraiture. She is driven to capture a variety of raw emotions and stir a human connection through her striking colour palette and energetic imagery that reflect her roots.<br><br>
+
+      Based between London and India.<br><br>
+
+      <strong>Contributor/Clients:</strong><br>
+      Dior, Atmos Magazine, Vogue, Elle, Verve, Icarus Complex Magazine, Azeema Magazine, Hunger Magazine, Hinge, It's Nice That, One Magazine, The WIRE, Homegrown, Conde Nast, TERUHIRO YANAGIHARA STUDIO.<br><br>
+
+      <strong>Contact:</strong><br>
+      Instagram<br>
+      raajadharshini.work@gmail.com<br><br>
+
+      <strong>Press:</strong><br>
+      <a href="#" target="_blank">The Wire</a><br>
+      <a href="#" target="_blank">One Magazine</a><br>
+      <a href="#" target="_blank">Elle India</a><br>
+      <a href="#" target="_blank">Financial Times</a><br>
+      <a href="#" target="_blank">Icarus Complex Magazine</a><br>
+      <a href="#" target="_blank">Atmos</a><br>
+      <a href="#" target="_blank">Azeema Magazine: How Raajadharshini's Languid Visual Documentation of Tamil Nadu Shatters Stereotypes</a><br>
+      <a href="#" target="_blank">Dazed: 5 inspiring new photographers exploring love, hope and resistance</a><br>
+      <a href="#" target="_blank">AnOther Magazine / CSM</a><br>
+      <a href="#" target="_blank">1Granary</a><br>
+      <a href="#" target="_blank">Central Saint Martins</a><br>
+      <a href="#" target="_blank">Usha Jey X HUNGER Magazine</a><br>
+      <a href="#" target="_blank">ItsNiceThat – The Sun Came Up</a><br>
+      <a href="#" target="_blank">Vogue India (Print/Digital) May–Jun 2023</a><br>
+      <a href="#" target="_blank">Vogue India – South Asia's leading women photographers</a><br>
+      <a href="#" target="_blank">PhotoVogue 100 – Next Great Fashion Image Makers</a><br>
+      <a href="#" target="_blank">Images for Hinge</a><br>
+      <a href="#" target="_blank">Homegrown</a><br><br>
+
+      <strong>Exhibitions:</strong><br>
+      PhotoVogue 100 – Milan<br>
+      Guts Gallery – London<br>
+      10–14 Gallery – "Thursday's Child", London<br>
+      Thursday's Child x Photobook Cafe – London, 2023<br>
+      YALE University – South Asian Youth Initiative: Reclaiming Roots 2025<br><br>
+
+      <strong>Education:</strong><br>
+      Central Saint Martins, UAL (2022)<br>
+      NIFT Delhi
+    </p>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const menuBtn = document.getElementById('menu-button');
+
+    menuBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = sidebar.classList.contains('open');
+      if (!isOpen) {
+        setTimeout(() => sidebar.classList.add('open'), 200);
+        menuBtn.style.opacity = '0';
+        menuBtn.style.pointerEvents = 'none';
+      } else {
+        sidebar.classList.remove('open');
+        menuBtn.style.opacity = '1';
+        menuBtn.style.pointerEvents = 'auto';
+      }
+      overlay.classList.toggle('show');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuBtn.style.opacity = '1';
+      menuBtn.style.pointerEvents = 'auto';
+    });
+
+    document.body.addEventListener('click', () => {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('show');
+        menuBtn.style.opacity = '1';
+        menuBtn.style.pointerEvents = 'auto';
+      }
+    });
+
+    sidebar.addEventListener('click', e => e.stopPropagation());
+  </script>
+</body>
+</html>
